@@ -52,6 +52,17 @@ module Formular
       end
     end
     
+    # A hidden field with the proper name and id.
+    def hidden_field(column, options = {})
+      create_field(column, { :label => '' }, [], options) do |f|
+        value = try(column) || ''
+        haml { '
+%span
+  %input{ :id => f.ident, :name => f.name, :type => "hidden", :value => value }
+' }
+      end
+    end
+
     # The check_box helper needs slightly different treatment.
     def check_box(column, options = {})
       selections = try(:selections, column) || []
@@ -240,7 +251,7 @@ module Formular
 
       label_content = skip_label ? '' : haml { '
 %label{ :for => ident }
-  = label.to_s.humanize unless label.blank?
+  = label.to_s unless label.blank?
   - if required
     %em *
   - unless msg.blank?
