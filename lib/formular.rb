@@ -170,7 +170,7 @@ module Formular
   %textarea{ :id => ident, :name => name, :cols => size, :rows => rows }= value
 - if selections.is_a?(Hash) and selections[sub]
   %select{ :id => ident, :name => name, :multiple => "multiple", |
-           :class => "predefined" }
+           :size => [10, selections[sub].length].min, :class => "predefined" } |
     - for (k, v) in selections[sub]
       %option{ :value => v }= k
 ' }
