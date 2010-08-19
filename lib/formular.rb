@@ -92,7 +92,7 @@ module Formular
     def select(column, *args)
       create_field(column, {}, *args) do |f|
         selections = f.args.empty? ? selections_for(column) : f.args[0]
-        empty = try :empty_selection, column
+        empty = f.options.delete(:empty) || try(:empty_selection, column)
         selections = [[empty, ""]] + selections if empty
         other = f.options.delete(:allow_other) || try(:allow_other?, column)
 
