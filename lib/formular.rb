@@ -124,7 +124,7 @@ module Formular
       create_field(column, {}, *args) do |f|
         size = f.options.delete(:size) || 40
         multi = f.options.delete(:repeatable) || try(:is_repeatable?, column)
-        current = @object.send(column) || (multi ? [] : {})
+        current = @object.send(column) || (multi ? [] : '')
 
         haml { '
 - if multi
