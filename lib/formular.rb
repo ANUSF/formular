@@ -146,21 +146,24 @@ module Formular
 
     def tabular(column, *args)
       create_field(column, {}, *args) do |f|
-        subfields = if f.args.empty? then try(:subfields, column)
-                    else f.args end
-        size = f.options.delete(:size) || 30
-        rows = f.options.delete(:rows) || 0
+        size  = f.options.delete(:size) || 30
+        rows  = f.options.delete(:rows) || 0
         multi = f.options.delete(:repeatable) || try(:is_repeatable?, column)
+        subfields  = if f.args.empty? then try(:subfields, column)
+                     else f.args end
         selections = selections_for(column)
         selections = { nil => selections } if subfields.blank?
-
-        current = @object.send(column) || (multi ? [] : {})
+        current    = @object.send(column) || (multi ? [] : {})
 
         make_field = lambda do |sub, i|
-          ident = f.ident + (i ? "_#{i}" : "") + (sub ? "_#{sub}" : "")
-          name  = f.name + (i ? "[#{i}]" : "") + (sub ? "[#{sub}]" : "")
-          this_row = i ? (current[i] || {}) : current
-          value = sub ? this_row[sub] : this_row
+          ident_suffix = (i ? "_#{i}" : "") + (sub ? "_#{sub}" : "")
+          name_suffix  = (i ? "[#{i}]" : "") + (sub ? "[#{sub}]" : "")
+          ident        = f.ident + ident_suffix
+          ident_x      = f.ident.sub(/^([^\[]*)/, '\\1_x') + ident_suffix
+          name         = f.name + name_suffix
+          name_x       = f.name.sub(/^([^\[]*)/, '\\1_x') + name_suffix
+          this_row     = i ? (current[i] || {}) : current
+          value        = sub ? this_row[sub] : this_row
 
           haml { '
 - if rows <= 0
@@ -169,7 +172,7 @@ module Formular
 - else
   %textarea{ :id => ident, :name => name, :cols => size, :rows => rows }= value
 - if selections.is_a?(Hash) and selections[sub]
-  %select{ :id => ident, :name => name, :multiple => "multiple", |
+  %select{ :id => ident_x, :name => name_x, :multiple => "multiple", |
            :size => [10, selections[sub].length].min, :class => "predefined" } |
     - for (k, v) in selections[sub]
       %option{ :value => v }= k
