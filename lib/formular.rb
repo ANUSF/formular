@@ -163,7 +163,7 @@ module Formular
           name         = f.name + name_suffix
           name_x       = f.name.sub(/^([^\[]*)/, '\\1_x') + name_suffix
           this_row     = i ? (current[i] || {}) : current
-          value        = sub ? this_row[sub] : this_row.inspect
+          value        = sub ? this_row[sub] : (this_row.blank? ? "" : this_row)
 
           haml { '
 - if rows <= 0
