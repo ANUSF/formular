@@ -17,6 +17,6 @@ Gem::Specification.new do |s|
     form elements and adds some special helpers for things like
     tabular data.
 
-    Copyright (c) 2010 ANU
+    Copyright (c) 2011 The Australian National University
   }
 end
